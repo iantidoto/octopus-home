@@ -8,9 +8,9 @@ const data = {
     "Otros": 50
   },
   previsiones: [
-    { nombre: "Cuota autónomo", categoria: "Profesional", monto: 275, fecha: "2025-10-15", nota: "Revisar recibo" },
-    { nombre: "Netflix", categoria: "Ocio", monto: 12, fecha: "2025-10-17", nota: "Último mes antes de cancelar" },
-    { nombre: "Ingreso beca", categoria: "Educación", monto: -133, fecha: "2025-10-20", nota: "Confirmar transferencia" }
+    { nombre: "Cuota autónomo", categoria: "Profesional", monto: 275, fecha: "2025-10-15", nota: "Revisar recibo", recurrente: "mensual", dia: 15 },
+    { nombre: "Netflix", categoria: "Ocio", monto: 12, fecha: "2025-10-17", nota: "Último mes antes de cancelar", recurrente: "mensual", dia: 17 },
+    { nombre: "Ingreso beca", categoria: "Educación", monto: -133, fecha: "2025-10-20", nota: "Confirmar transferencia", recurrente: "único" }
   ]
 };
 
@@ -47,10 +47,26 @@ closeForecast.addEventListener("click", () => {
 });
 
 // Cargar previsiones iniciales
+function cargarPrevisiones() {
+  forecastList.innerHTML = "";
+  data.previsiones.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = `${item.nombre} | ${item.categoria} | ${item.monto} € | ${item.fecha} | ${item.nota}`;
+    forecastList.appendChild(li);
+  });
+}
+cargarPrevisiones();
+
+// Detectar gastos recurrentes hoy
+const hoy = new Date();
+const diaHoy = hoy.getDate();
+
 data.previsiones.forEach(item => {
-  const li = document.createElement("li");
-  li.textContent = `${item.nombre} | ${item.categoria} | ${item.monto} € | ${item.fecha} | ${item.nota}`;
-  forecastList.appendChild(li);
+  if (item.recurrente && item.recurrente !== "único" && parseInt(item.dia) === diaHoy) {
+    const li = document.createElement("li");
+    li.textContent = `🔁 ${item.nombre} | ${item.categoria} | ${item.monto} € | HOY | ${item.nota}`;
+    forecastList.appendChild(li);
+  }
 });
 
 // Detalle al hacer clic en ingresos/gastos
@@ -104,7 +120,7 @@ form.addEventListener("submit", (e) => {
     fecha: document.getElementById("fecha").value,
     nota: document.getElementById("nota").value,
     recurrente: tipoRecurrencia,
-    frecuencia: tipoRecurrencia === "personalizado" ? `Día ${diaRecurrencia}` : ""
+    dia: tipoRecurrencia !== "único" ? parseInt(diaRecurrencia) : null
   };
 
   // Añadir nueva categoría si no existe
@@ -115,9 +131,9 @@ form.addEventListener("submit", (e) => {
     categoriaList.appendChild(nuevaOpcion);
   }
 
-  const hoy = new Date().toISOString().split("T")[0];
+  const hoyISO = hoy.toISOString().split("T")[0];
 
-  if (nuevo.fecha <= hoy) {
+  if (nuevo.fecha <= hoyISO) {
     // Gasto ya realizado
     data.gastos += nuevo.monto;
     data.ingresos -= nuevo.monto;
@@ -125,9 +141,8 @@ form.addEventListener("submit", (e) => {
     document.getElementById("incomeTotal").textContent = `${data.ingresos} €`;
   } else {
     // Gasto futuro → previsión
-    const li = document.createElement("li");
-    li.textContent = `${nuevo.nombre} | ${nuevo.categoria} | ${nuevo.monto} € | ${nuevo.fecha} | ${nuevo.nota}`;
-    forecastList.appendChild(li);
+    data.previsiones.push(nuevo);
+    cargarPrevisiones();
   }
 
   alert(`Movimiento guardado:\n${nuevo.nombre} | ${nuevo.categoria} | ${nuevo.monto} €`);
