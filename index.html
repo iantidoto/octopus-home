@@ -94,16 +94,19 @@
     </div>
   </div>
 
-  <!-- Modal para añadir categoría -->
+  <!-- Modal para añadir y gestionar categorías -->
   <div id="categoriaModal" class="modal hidden">
     <div class="modal-content">
-      <h2>Nueva categoría</h2>
-      <label>Nombre de la categoría:</label>
+      <h2>Gestión de categorías</h2>
+      <label>Nueva categoría:</label>
       <input type="text" id="nuevaCategoria" placeholder="Ej. Educación, Mascotas..." />
       <div class="modal-buttons">
         <button type="button" id="guardarCategoria">Guardar</button>
         <button type="button" id="cancelCategoria">Cancelar</button>
       </div>
+      <hr style="margin: 15px 0; border-color: #444;" />
+      <h3>Categorías actuales:</h3>
+      <ul id="listaCategorias"></ul>
     </div>
   </div>
 
