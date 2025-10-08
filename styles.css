@@ -103,3 +103,21 @@ canvas {
   border-radius: 8px;
   cursor: pointer;
 }
+
+#forecastToggle {
+  margin-left: 20px;
+  transition: background-color 0.3s ease;
+}
+
+#forecastPanel {
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+#forecastPanel.visible {
+  max-height: 500px;
+  opacity: 1;
+}
+
