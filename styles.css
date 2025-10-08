@@ -76,28 +76,6 @@ canvas {
   display: block;
 }
 
-#forecastPanel {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: max-height 2.0s ease, opacity 0.4s ease;
-}
-
-#forecastPanel.visible {
-  max-height: 500px;
-  opacity: 1;
-}
-
-#forecastList li {
-  margin-bottom: 10px;
-  list-style: none;
-}
-
 .add {
   text-align: center;
 }
@@ -181,11 +159,17 @@ canvas {
   color: white;
 }
 
-.modal-buttons button#cancelModal {
+.modal-buttons button#cancelModal,
+.modal-buttons button#closeForecast {
   background-color: #757575;
   color: white;
 }
 
 .hidden {
   display: none;
+}
+
+#personalizadoPanel {
+  margin-top: 10px;
+  transition: max-height 0.3s ease;
 }
