@@ -46,12 +46,13 @@
         <input type="text" id="nombre" required />
 
         <label>Categoría:</label>
-        <select id="categoria">
-          <option>Hogar</option>
-          <option>Ocio</option>
-          <option>Transporte</option>
-          <option>Otros</option>
-        </select>
+<input type="text" id="categoriaInput" list="categoriaList" placeholder="Ej. Hogar, Ocio..." />
+<datalist id="categoriaList">
+  <option value="Hogar">
+  <option value="Ocio">
+  <option value="Transporte">
+  <option value="Otros">
+</datalist>
 
         <label>Monto (€):</label>
         <input type="number" id="monto" required />
