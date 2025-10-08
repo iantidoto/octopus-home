@@ -38,52 +38,46 @@
     <button id="addExpense">➕ Añadir movimiento</button>
   </section>
 
+  <div id="expenseModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Nuevo movimiento</h2>
+      <form id="expenseForm">
+        <label>Nombre:</label>
+        <input type="text" id="nombre" required />
+
+        <label>Categoría:</label>
+        <select id="categoria">
+          <option>Hogar</option>
+          <option>Ocio</option>
+          <option>Transporte</option>
+          <option>Otros</option>
+        </select>
+
+        <label>Monto (€):</label>
+        <input type="number" id="monto" required />
+
+        <label>Fecha:</label>
+        <input type="date" id="fecha" />
+
+        <label>Nota:</label>
+        <textarea id="nota" rows="2"></textarea>
+
+        <label>Repetición:</label>
+        <select id="repeticion">
+          <option>Único</option>
+          <option>Mensual</option>
+          <option>Personalizado</option>
+        </select>
+
+        <div class="modal-buttons">
+          <button type="submit">Guardar</button>
+          <button type="button" id="cancelModal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
-
-  <!-- Botón añadir -->
-<section class="add">
-  <button id="addExpense">➕ Añadir movimiento</button>
-</section>
-
-<!-- Modal de entrada -->
-<div id="expenseModal" class="modal hidden">
-  <div class="modal-content">
-    <h2>Nuevo movimiento</h2>
-    <form id="expenseForm">
-      <label>Nombre:</label>
-      <input type="text" id="nombre" required />
-
-      <label>Categoría:</label>
-      <select id="categoria">
-        <option>Hogar</option>
-        <option>Ocio</option>
-        <option>Transporte</option>
-        <option>Otros</option>
-      </select>
-
-      <label>Monto (€):</label>
-      <input type="number" id="monto" required />
-
-      <label>Fecha:</label>
-      <input type="date" id="fecha" />
-
-      <label>Nota:</label>
-      <textarea id="nota" rows="2"></textarea>
-
-      <label>Repetición:</label>
-      <select id="repeticion">
-        <option>Único</option>
-        <option>Mensual</option>
-        <option>Personalizado</option>
-      </select>
-
-      <div class="modal-buttons">
-        <button type="submit">Guardar</button>
-        <button type="button" id="cancelModal">Cancelar</button>
-      </div>
-    </form>
-  </div>
-</div>
 </body>
 </html>
