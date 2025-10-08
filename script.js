@@ -8,9 +8,9 @@ const data = {
     "Otros": 50
   },
   previsiones: [
-    { nombre: "Cuota autónomo", categoria: "Profesional", monto: 275, fecha: "15/10", nota: "Revisar recibo" },
-    { nombre: "Netflix", categoria: "Ocio", monto: 12, fecha: "17/10", nota: "Último mes antes de cancelar" },
-    { nombre: "Ingreso beca", categoria: "Educación", monto: -133, fecha: "20/10", nota: "Confirmar transferencia" }
+    { nombre: "Cuota autónomo", categoria: "Profesional", monto: 275, fecha: "2025-10-15", nota: "Revisar recibo" },
+    { nombre: "Netflix", categoria: "Ocio", monto: 12, fecha: "2025-10-17", nota: "Último mes antes de cancelar" },
+    { nombre: "Ingreso beca", categoria: "Educación", monto: -133, fecha: "2025-10-20", nota: "Confirmar transferencia" }
   ]
 };
 
@@ -32,16 +32,21 @@ for (let i = 0; i < 12; i++) {
 document.getElementById("incomeTotal").textContent = `${data.ingresos} €`;
 document.getElementById("expensesTotal").textContent = `${data.gastos} €`;
 
-// Mostrar previsión con animación
+// Mostrar previsión en modal
 const toggleBtn = document.getElementById("forecastToggle");
-const forecastPanel = document.getElementById("forecastPanel");
+const forecastModal = document.getElementById("forecastModal");
 const forecastList = document.getElementById("forecastList");
+const closeForecast = document.getElementById("closeForecast");
 
 toggleBtn.addEventListener("click", () => {
-  forecastPanel.classList.toggle("visible");
+  forecastModal.classList.remove("hidden");
 });
 
-// Cargar previsiones
+closeForecast.addEventListener("click", () => {
+  forecastModal.classList.add("hidden");
+});
+
+// Cargar previsiones iniciales
 data.previsiones.forEach(item => {
   const li = document.createElement("li");
   li.textContent = `${item.nombre} | ${item.categoria} | ${item.monto} € | ${item.fecha} | ${item.nota}`;
@@ -57,7 +62,7 @@ document.getElementById("expensesBox").addEventListener("click", () => {
   alert("Detalle de gastos:\n- Hogar: 250 €\n- Ocio: 100 €\n- Transporte: 50 €\n- Otros: 50 €");
 });
 
-// Modal emergente
+// Modal de nuevo movimiento
 const modal = document.getElementById("expenseModal");
 const addBtn = document.getElementById("addExpense");
 const cancelBtn = document.getElementById("cancelModal");
@@ -83,12 +88,14 @@ recurrenteSelect.addEventListener("change", () => {
   }
 });
 
-// Guardar nuevo movimiento y añadir categoría si es nueva
+// Guardar nuevo movimiento
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
   const categoriaInput = document.getElementById("categoriaInput");
   const categoriaList = document.getElementById("categoriaList");
+  const tipoRecurrencia = document.getElementById("recurrente").value;
+  const diaRecurrencia = document.getElementById("diaRecurrencia").value;
 
   const nuevo = {
     nombre: document.getElementById("nombre").value,
@@ -96,10 +103,8 @@ form.addEventListener("submit", (e) => {
     monto: parseFloat(document.getElementById("monto").value),
     fecha: document.getElementById("fecha").value,
     nota: document.getElementById("nota").value,
-    recurrente: recurrenteSelect.value,
-    frecuencia: recurrenteSelect.value === "personalizado"
-      ? document.getElementById("frecuencia").value
-      : ""
+    recurrente: tipoRecurrencia,
+    frecuencia: tipoRecurrencia === "personalizado" ? `Día ${diaRecurrencia}` : ""
   };
 
   // Añadir nueva categoría si no existe
@@ -110,10 +115,20 @@ form.addEventListener("submit", (e) => {
     categoriaList.appendChild(nuevaOpcion);
   }
 
-  // Mostrar en previsión
-  const li = document.createElement("li");
-  li.textContent = `${nuevo.nombre} | ${nuevo.categoria} | ${nuevo.monto} € | ${nuevo.fecha} | ${nuevo.nota}`;
-  forecastList.appendChild(li);
+  const hoy = new Date().toISOString().split("T")[0];
+
+  if (nuevo.fecha <= hoy) {
+    // Gasto ya realizado
+    data.gastos += nuevo.monto;
+    data.ingresos -= nuevo.monto;
+    document.getElementById("expensesTotal").textContent = `${data.gastos} €`;
+    document.getElementById("incomeTotal").textContent = `${data.ingresos} €`;
+  } else {
+    // Gasto futuro → previsión
+    const li = document.createElement("li");
+    li.textContent = `${nuevo.nombre} | ${nuevo.categoria} | ${nuevo.monto} € | ${nuevo.fecha} | ${nuevo.nota}`;
+    forecastList.appendChild(li);
+  }
 
   alert(`Movimiento guardado:\n${nuevo.nombre} | ${nuevo.categoria} | ${nuevo.monto} €`);
   modal.classList.add("hidden");
