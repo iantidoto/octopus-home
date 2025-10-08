@@ -11,12 +11,10 @@ let data = JSON.parse(localStorage.getItem("octopusData")) || {
   previsiones: []
 };
 
-// Guardar datos en localStorage
 function guardarDatos() {
   localStorage.setItem("octopusData", JSON.stringify(data));
 }
 
-// Generar selector de meses dinámico
 const monthSelector = document.getElementById("monthSelector");
 const today = new Date();
 
@@ -30,14 +28,12 @@ for (let i = 0; i < 12; i++) {
   monthSelector.appendChild(option);
 }
 
-// Mostrar totales
 function actualizarTotales() {
   document.getElementById("incomeTotal").textContent = `${data.ingresos} €`;
   document.getElementById("expensesTotal").textContent = `${data.gastos} €`;
 }
 actualizarTotales();
 
-// Mostrar previsión en modal
 const toggleBtn = document.getElementById("forecastToggle");
 const forecastModal = document.getElementById("forecastModal");
 const forecastList = document.getElementById("forecastList");
@@ -51,16 +47,15 @@ closeForecast.addEventListener("click", () => {
   forecastModal.classList.add("hidden");
 });
 
-// Cargar previsiones
 function cargarPrevisiones() {
   forecastList.innerHTML = "";
-  data.previsiones.forEach(item => {
+  data.previsiones.forEach((item, index) => {
     const li = document.createElement("li");
-    li.textContent = `${item.nombre} | ${item.categoria} | ${item.monto} € | ${item.fecha} | ${item.nota}`;
+    li.innerHTML = `${item.nombre} | ${item.categoria} | ${item.monto} € | ${item.fecha} | ${item.nota}
+      <button onclick="eliminarPrevision(${index})">🗑️</button>`;
     forecastList.appendChild(li);
   });
 
-  // Detectar gastos recurrentes hoy
   const hoy = new Date();
   const diaHoy = hoy.getDate();
 
@@ -74,7 +69,12 @@ function cargarPrevisiones() {
 }
 cargarPrevisiones();
 
-// Detalle al hacer clic en ingresos/gastos
+function eliminarPrevision(index) {
+  data.previsiones.splice(index, 1);
+  guardarDatos();
+  cargarPrevisiones();
+}
+
 document.getElementById("incomeBox").addEventListener("click", () => {
   alert("Detalle de ingresos:\n- Beca: 133 €\n- Proyecto freelance: 527 €");
 });
@@ -83,7 +83,6 @@ document.getElementById("expensesBox").addEventListener("click", () => {
   alert("Detalle de gastos:\n- Hogar: 250 €\n- Ocio: 100 €\n- Transporte: 50 €\n- Otros: 50 €");
 });
 
-// Modal de nuevo movimiento
 const modal = document.getElementById("expenseModal");
 const addBtn = document.getElementById("addExpense");
 const cancelBtn = document.getElementById("cancelModal");
@@ -97,7 +96,6 @@ cancelBtn.addEventListener("click", () => {
   modal.classList.add("hidden");
 });
 
-// Mostrar panel personalizado si se elige "personalizado"
 const recurrenteSelect = document.getElementById("recurrente");
 const personalizadoPanel = document.getElementById("personalizadoPanel");
 
@@ -109,7 +107,6 @@ recurrenteSelect.addEventListener("change", () => {
   }
 });
 
-// Guardar nuevo movimiento
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -128,9 +125,8 @@ form.addEventListener("submit", (e) => {
     dia: tipoRecurrencia !== "único" ? parseInt(diaRecurrencia) : null
   };
 
-  // Añadir nueva categoría si no existe
-  const existe = Array.from(categoriaList.options).some(opt => opt.value === nuevo.categoria);
-  if (!existe && nuevo.categoria !== "") {
+  if (!data.categorias[nuevo.categoria]) {
+    data.categorias[nuevo.categoria] = 0;
     const nuevaOpcion = document.createElement("option");
     nuevaOpcion.value = nuevo.categoria;
     categoriaList.appendChild(nuevaOpcion);
@@ -141,6 +137,7 @@ form.addEventListener("submit", (e) => {
   if (nuevo.fecha <= hoyISO) {
     data.gastos += nuevo.monto;
     data.ingresos -= nuevo.monto;
+    data.categorias[nuevo.categoria] += nuevo.monto;
   } else {
     data.previsiones.push(nuevo);
   }
@@ -148,23 +145,28 @@ form.addEventListener("submit", (e) => {
   guardarDatos();
   actualizarTotales();
   cargarPrevisiones();
+  actualizarGrafico();
 
   alert(`Movimiento guardado:\n${nuevo.nombre} | ${nuevo.categoria} | ${nuevo.monto} €`);
   modal.classList.add("hidden");
   form.reset();
   personalizadoPanel.classList.add("hidden");
-});
+}
 
-// Modal de nueva categoría
+);
+
 const categoriaModal = document.getElementById("categoriaModal");
 const openCategoriaModal = document.getElementById("openCategoriaModal");
 const guardarCategoria = document.getElementById("guardarCategoria");
 const cancelCategoria = document.getElementById("cancelCategoria");
 const nuevaCategoriaInput = document.getElementById("nuevaCategoria");
+const listaCategorias = document.getElementById("listaCategorias");
+const categoriaList = document.getElementById("categoriaList");
 
 openCategoriaModal.addEventListener("click", () => {
   categoriaModal.classList.remove("hidden");
   nuevaCategoriaInput.value = "";
+  cargarListaCategorias();
 });
 
 cancelCategoria.addEventListener("click", () => {
@@ -173,22 +175,69 @@ cancelCategoria.addEventListener("click", () => {
 
 guardarCategoria.addEventListener("click", () => {
   const nuevaCategoria = nuevaCategoriaInput.value.trim();
-  const categoriaList = document.getElementById("categoriaList");
-
   if (nuevaCategoria === "") {
     alert("Por favor, escribe un nombre para la categoría.");
     return;
   }
 
-  const existe = Array.from(categoriaList.options).some(opt => opt.value.toLowerCase() === nuevaCategoria.toLowerCase());
-  if (existe) {
+  if (data.categorias[nuevaCategoria]) {
     alert("Esa categoría ya existe.");
     return;
   }
 
+  data.categorias[nuevaCategoria] = 0;
   const nuevaOpcion = document.createElement("option");
   nuevaOpcion.value = nuevaCategoria;
   categoriaList.appendChild(nuevaOpcion);
+  guardarDatos();
+  cargarListaCategorias();
   alert(`Categoría "${nuevaCategoria}" añadida correctamente.`);
-  categoriaModal.classList.add("hidden");
+  nuevaCategoriaInput.value = "";
 });
+
+function cargarListaCategorias() {
+  listaCategorias.innerHTML = "";
+  Object.keys(data.categorias).forEach(cat => {
+    const li = document.createElement("li");
+    li.innerHTML = `${cat} <button onclick="eliminarCategoria('${cat}')">🗑️</button>`;
+    listaCategorias.appendChild(li);
+  });
+}
+
+function eliminarCategoria(nombre) {
+  if (confirm(`¿Eliminar la categoría "${nombre}"?`)) {
+    delete data.categorias[nombre];
+    guardarDatos();
+    cargarListaCategorias();
+    actualizarGrafico();
+    categoriaList.innerHTML = "";
+    Object.keys(data.categorias).forEach(cat => {
+      const opt = document.createElement("option");
+      opt.value = cat;
+      categoriaList.appendChild(opt);
+    });
+  }
+}
+
+function actualizarGrafico() {
+  const ctx = document.getElementById("expenseChart").getContext("2d");
+  new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: Object.keys(data.categorias),
+      datasets: [{
+        data: Object.values(data.categorias),
+        backgroundColor: ["#fdd835", "#ef9a9a", "#90caf9", "#cfd8dc"]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "bottom"
+        }
+      }
+    }
+  });
+}
+actualizarGrafico();
