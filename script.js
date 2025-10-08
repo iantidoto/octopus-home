@@ -71,20 +71,54 @@ cancelBtn.addEventListener("click", () => {
   modal.classList.add("hidden");
 });
 
+// Mostrar panel personalizado si se elige "personalizado"
+const recurrenteSelect = document.getElementById("recurrente");
+const personalizadoPanel = document.getElementById("personalizadoPanel");
+
+recurrenteSelect.addEventListener("change", () => {
+  if (recurrenteSelect.value === "personalizado") {
+    personalizadoPanel.classList.remove("hidden");
+  } else {
+    personalizadoPanel.classList.add("hidden");
+  }
+});
+
+// Guardar nuevo movimiento y añadir categoría si es nueva
 form.addEventListener("submit", (e) => {
   e.preventDefault();
+
+  const categoriaInput = document.getElementById("categoriaInput");
+  const categoriaList = document.getElementById("categoriaList");
+
   const nuevo = {
     nombre: document.getElementById("nombre").value,
-    categoria: document.getElementById("categoria").value,
+    categoria: categoriaInput.value.trim(),
     monto: parseFloat(document.getElementById("monto").value),
     fecha: document.getElementById("fecha").value,
     nota: document.getElementById("nota").value,
-    repeticion: document.getElementById("repeticion").value
+    recurrente: recurrenteSelect.value,
+    frecuencia: recurrenteSelect.value === "personalizado"
+      ? document.getElementById("frecuencia").value
+      : ""
   };
+
+  // Añadir nueva categoría si no existe
+  const existe = Array.from(categoriaList.options).some(opt => opt.value === nuevo.categoria);
+  if (!existe && nuevo.categoria !== "") {
+    const nuevaOpcion = document.createElement("option");
+    nuevaOpcion.value = nuevo.categoria;
+    categoriaList.appendChild(nuevaOpcion);
+  }
+
+  // Mostrar en previsión
+  const li = document.createElement("li");
+  li.textContent = `${nuevo.nombre} | ${nuevo.categoria} | ${nuevo.monto} € | ${nuevo.fecha} | ${nuevo.nota}`;
+  forecastList.appendChild(li);
 
   alert(`Movimiento guardado:\n${nuevo.nombre} | ${nuevo.categoria} | ${nuevo.monto} €`);
   modal.classList.add("hidden");
   form.reset();
+  personalizadoPanel.classList.add("hidden");
 });
 
 // Gráfico circular
