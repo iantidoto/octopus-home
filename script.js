@@ -1,4 +1,5 @@
-const data = {
+// Cargar datos desde localStorage o usar valores iniciales
+let data = JSON.parse(localStorage.getItem("octopusData")) || {
   ingresos: 660,
   gastos: 450,
   categorias: {
@@ -7,12 +8,13 @@ const data = {
     "Transporte": 50,
     "Otros": 50
   },
-  previsiones: [
-    { nombre: "Cuota autónomo", categoria: "Profesional", monto: 275, fecha: "2025-10-15", nota: "Revisar recibo", recurrente: "mensual", dia: 15 },
-    { nombre: "Netflix", categoria: "Ocio", monto: 12, fecha: "2025-10-17", nota: "Último mes antes de cancelar", recurrente: "mensual", dia: 17 },
-    { nombre: "Ingreso beca", categoria: "Educación", monto: -133, fecha: "2025-10-20", nota: "Confirmar transferencia", recurrente: "único" }
-  ]
+  previsiones: []
 };
+
+// Guardar datos en localStorage
+function guardarDatos() {
+  localStorage.setItem("octopusData", JSON.stringify(data));
+}
 
 // Generar selector de meses dinámico
 const monthSelector = document.getElementById("monthSelector");
@@ -29,8 +31,11 @@ for (let i = 0; i < 12; i++) {
 }
 
 // Mostrar totales
-document.getElementById("incomeTotal").textContent = `${data.ingresos} €`;
-document.getElementById("expensesTotal").textContent = `${data.gastos} €`;
+function actualizarTotales() {
+  document.getElementById("incomeTotal").textContent = `${data.ingresos} €`;
+  document.getElementById("expensesTotal").textContent = `${data.gastos} €`;
+}
+actualizarTotales();
 
 // Mostrar previsión en modal
 const toggleBtn = document.getElementById("forecastToggle");
@@ -46,7 +51,7 @@ closeForecast.addEventListener("click", () => {
   forecastModal.classList.add("hidden");
 });
 
-// Cargar previsiones iniciales
+// Cargar previsiones
 function cargarPrevisiones() {
   forecastList.innerHTML = "";
   data.previsiones.forEach(item => {
@@ -54,20 +59,20 @@ function cargarPrevisiones() {
     li.textContent = `${item.nombre} | ${item.categoria} | ${item.monto} € | ${item.fecha} | ${item.nota}`;
     forecastList.appendChild(li);
   });
+
+  // Detectar gastos recurrentes hoy
+  const hoy = new Date();
+  const diaHoy = hoy.getDate();
+
+  data.previsiones.forEach(item => {
+    if (item.recurrente && item.recurrente !== "único" && parseInt(item.dia) === diaHoy) {
+      const li = document.createElement("li");
+      li.textContent = `🔁 ${item.nombre} | ${item.categoria} | ${item.monto} € | HOY | ${item.nota}`;
+      forecastList.appendChild(li);
+    }
+  });
 }
 cargarPrevisiones();
-
-// Detectar gastos recurrentes hoy
-const hoy = new Date();
-const diaHoy = hoy.getDate();
-
-data.previsiones.forEach(item => {
-  if (item.recurrente && item.recurrente !== "único" && parseInt(item.dia) === diaHoy) {
-    const li = document.createElement("li");
-    li.textContent = `🔁 ${item.nombre} | ${item.categoria} | ${item.monto} € | HOY | ${item.nota}`;
-    forecastList.appendChild(li);
-  }
-});
 
 // Detalle al hacer clic en ingresos/gastos
 document.getElementById("incomeBox").addEventListener("click", () => {
@@ -131,17 +136,18 @@ form.addEventListener("submit", (e) => {
     categoriaList.appendChild(nuevaOpcion);
   }
 
-  const hoyISO = hoy.toISOString().split("T")[0];
+  const hoyISO = today.toISOString().split("T")[0];
 
   if (nuevo.fecha <= hoyISO) {
     data.gastos += nuevo.monto;
     data.ingresos -= nuevo.monto;
-    document.getElementById("expensesTotal").textContent = `${data.gastos} €`;
-    document.getElementById("incomeTotal").textContent = `${data.ingresos} €`;
   } else {
     data.previsiones.push(nuevo);
-    cargarPrevisiones();
   }
+
+  guardarDatos();
+  actualizarTotales();
+  cargarPrevisiones();
 
   alert(`Movimiento guardado:\n${nuevo.nombre} | ${nuevo.categoria} | ${nuevo.monto} €`);
   modal.classList.add("hidden");
