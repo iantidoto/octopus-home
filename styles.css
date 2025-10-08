@@ -154,13 +154,15 @@ canvas {
   cursor: pointer;
 }
 
-.modal-buttons button[type="submit"] {
+.modal-buttons button[type="submit"],
+.modal-buttons button#guardarCategoria {
   background-color: #4caf50;
   color: white;
 }
 
 .modal-buttons button#cancelModal,
-.modal-buttons button#closeForecast {
+.modal-buttons button#closeForecast,
+.modal-buttons button#cancelCategoria {
   background-color: #757575;
   color: white;
 }
@@ -172,4 +174,24 @@ canvas {
 #personalizadoPanel {
   margin-top: 10px;
   transition: max-height 0.3s ease;
+}
+
+.categoria-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.categoria-row input {
+  flex: 1;
+}
+
+.categoria-row button {
+  padding: 6px 10px;
+  font-size: 1rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
