@@ -82,3 +82,32 @@ new Chart(ctx, {
     }
   }
 });
+
+const modal = document.getElementById("expenseModal");
+const addBtn = document.getElementById("addExpense");
+const cancelBtn = document.getElementById("cancelModal");
+const form = document.getElementById("expenseForm");
+
+addBtn.addEventListener("click", () => {
+  modal.classList.remove("hidden");
+});
+
+cancelBtn.addEventListener("click", () => {
+  modal.classList.add("hidden");
+});
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const nuevo = {
+    nombre: document.getElementById("nombre").value,
+    categoria: document.getElementById("categoria").value,
+    monto: parseFloat(document.getElementById("monto").value),
+    fecha: document.getElementById("fecha").value,
+    nota: document.getElementById("nota").value,
+    repeticion: document.getElementById("repeticion").value
+  };
+
+  alert(`Movimiento guardado:\n${nuevo.nombre} | ${nuevo.categoria} | ${nuevo.monto} €`);
+  modal.classList.add("hidden");
+  form.reset();
+});
