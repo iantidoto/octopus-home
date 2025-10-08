@@ -134,13 +134,11 @@ form.addEventListener("submit", (e) => {
   const hoyISO = hoy.toISOString().split("T")[0];
 
   if (nuevo.fecha <= hoyISO) {
-    // Gasto ya realizado
     data.gastos += nuevo.monto;
     data.ingresos -= nuevo.monto;
     document.getElementById("expensesTotal").textContent = `${data.gastos} €`;
     document.getElementById("incomeTotal").textContent = `${data.ingresos} €`;
   } else {
-    // Gasto futuro → previsión
     data.previsiones.push(nuevo);
     cargarPrevisiones();
   }
@@ -151,23 +149,40 @@ form.addEventListener("submit", (e) => {
   personalizadoPanel.classList.add("hidden");
 });
 
-// Gráfico circular
-const ctx = document.getElementById("expenseChart").getContext("2d");
-new Chart(ctx, {
-  type: "pie",
-  data: {
-    labels: Object.keys(data.categorias),
-    datasets: [{
-      data: Object.values(data.categorias),
-      backgroundColor: ["#fdd835", "#ef9a9a", "#90caf9", "#cfd8dc"]
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "bottom"
-      }
-    }
+// Modal de nueva categoría
+const categoriaModal = document.getElementById("categoriaModal");
+const openCategoriaModal = document.getElementById("openCategoriaModal");
+const guardarCategoria = document.getElementById("guardarCategoria");
+const cancelCategoria = document.getElementById("cancelCategoria");
+const nuevaCategoriaInput = document.getElementById("nuevaCategoria");
+
+openCategoriaModal.addEventListener("click", () => {
+  categoriaModal.classList.remove("hidden");
+  nuevaCategoriaInput.value = "";
+});
+
+cancelCategoria.addEventListener("click", () => {
+  categoriaModal.classList.add("hidden");
+});
+
+guardarCategoria.addEventListener("click", () => {
+  const nuevaCategoria = nuevaCategoriaInput.value.trim();
+  const categoriaList = document.getElementById("categoriaList");
+
+  if (nuevaCategoria === "") {
+    alert("Por favor, escribe un nombre para la categoría.");
+    return;
   }
+
+  const existe = Array.from(categoriaList.options).some(opt => opt.value.toLowerCase() === nuevaCategoria.toLowerCase());
+  if (existe) {
+    alert("Esa categoría ya existe.");
+    return;
+  }
+
+  const nuevaOpcion = document.createElement("option");
+  nuevaOpcion.value = nuevaCategoria;
+  categoriaList.appendChild(nuevaOpcion);
+  alert(`Categoría "${nuevaCategoria}" añadida correctamente.`);
+  categoriaModal.classList.add("hidden");
 });
