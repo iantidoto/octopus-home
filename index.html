@@ -29,16 +29,22 @@
     <canvas id="expenseChart"></canvas>
   </section>
 
-  <section id="forecastPanel">
-    <h2>Previsión de gastos</h2>
-    <ul id="forecastList"></ul>
-  </section>
-
   <section class="add">
     <button id="addExpense">➕ Añadir movimiento</button>
   </section>
 
-  <!-- Modal emergente -->
+  <!-- Modal de previsión -->
+  <div id="forecastModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Previsión de gastos</h2>
+      <ul id="forecastList"></ul>
+      <div class="modal-buttons">
+        <button type="button" id="closeForecast">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de nuevo movimiento -->
   <div id="expenseModal" class="modal hidden">
     <div class="modal-content">
       <h2>Nuevo movimiento</h2>
@@ -68,16 +74,13 @@
         <select id="recurrente">
           <option value="único">Único</option>
           <option value="mensual">Mensual</option>
+          <option value="trimestral">Trimestral</option>
           <option value="personalizado">Personalizado</option>
         </select>
 
         <div id="personalizadoPanel" class="hidden">
-          <label>Frecuencia:</label>
-          <select id="frecuencia">
-            <option value="cada semana">Cada semana</option>
-            <option value="cada 15 días">Cada 15 días</option>
-            <option value="cada 3 meses">Cada 3 meses</option>
-          </select>
+          <label>Día del mes:</label>
+          <input type="number" id="diaRecurrencia" min="1" max="31" placeholder="Ej. 15" />
         </div>
 
         <div class="modal-buttons">
