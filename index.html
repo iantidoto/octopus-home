@@ -38,6 +38,7 @@
     <button id="addExpense">➕ Añadir movimiento</button>
   </section>
 
+  <!-- Modal emergente -->
   <div id="expenseModal" class="modal hidden">
     <div class="modal-content">
       <h2>Nuevo movimiento</h2>
@@ -46,13 +47,13 @@
         <input type="text" id="nombre" required />
 
         <label>Categoría:</label>
-<input type="text" id="categoriaInput" list="categoriaList" placeholder="Ej. Hogar, Ocio..." />
-<datalist id="categoriaList">
-  <option value="Hogar">
-  <option value="Ocio">
-  <option value="Transporte">
-  <option value="Otros">
-</datalist>
+        <input type="text" id="categoriaInput" list="categoriaList" placeholder="Ej. Hogar, Ocio..." />
+        <datalist id="categoriaList">
+          <option value="Hogar">
+          <option value="Ocio">
+          <option value="Transporte">
+          <option value="Otros">
+        </datalist>
 
         <label>Monto (€):</label>
         <input type="number" id="monto" required />
@@ -63,12 +64,21 @@
         <label>Nota:</label>
         <textarea id="nota" rows="2"></textarea>
 
-        <label>Repetición:</label>
-        <select id="repeticion">
-          <option>Único</option>
-          <option>Mensual</option>
-          <option>Personalizado</option>
+        <label>Recurrente:</label>
+        <select id="recurrente">
+          <option value="único">Único</option>
+          <option value="mensual">Mensual</option>
+          <option value="personalizado">Personalizado</option>
         </select>
+
+        <div id="personalizadoPanel" class="hidden">
+          <label>Frecuencia:</label>
+          <select id="frecuencia">
+            <option value="cada semana">Cada semana</option>
+            <option value="cada 15 días">Cada 15 días</option>
+            <option value="cada 3 meses">Cada 3 meses</option>
+          </select>
+        </div>
 
         <div class="modal-buttons">
           <button type="submit">Guardar</button>
