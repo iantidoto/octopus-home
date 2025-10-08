@@ -22,7 +22,7 @@ const forecastPanel = document.getElementById("forecastPanel");
 const forecastList = document.getElementById("forecastList");
 
 toggleBtn.addEventListener("click", () => {
-  forecastPanel.classList.toggle("hidden");
+  forecastPanel.classList.toggle("visible");
 });
 
 data.previsiones.forEach(item => {
