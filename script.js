@@ -57,27 +57,7 @@ document.getElementById("expensesBox").addEventListener("click", () => {
   alert("Detalle de gastos:\n- Hogar: 250 €\n- Ocio: 100 €\n- Transporte: 50 €\n- Otros: 50 €");
 });
 
-// Gráfico circular
-const ctx = document.getElementById("expenseChart").getContext("2d");
-new Chart(ctx, {
-  type: "pie",
-  data: {
-    labels: Object.keys(data.categorias),
-    datasets: [{
-      data: Object.values(data.categorias),
-      backgroundColor: ["#fdd835", "#ef9a9a", "#90caf9", "#cfd8dc"]
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "bottom"
-      }
-    }
-  }
-});
-
+// Modal emergente
 const modal = document.getElementById("expenseModal");
 const addBtn = document.getElementById("addExpense");
 const cancelBtn = document.getElementById("cancelModal");
@@ -105,4 +85,25 @@ form.addEventListener("submit", (e) => {
   alert(`Movimiento guardado:\n${nuevo.nombre} | ${nuevo.categoria} | ${nuevo.monto} €`);
   modal.classList.add("hidden");
   form.reset();
+});
+
+// Gráfico circular
+const ctx = document.getElementById("expenseChart").getContext("2d");
+new Chart(ctx, {
+  type: "pie",
+  data: {
+    labels: Object.keys(data.categorias),
+    datasets: [{
+      data: Object.values(data.categorias),
+      backgroundColor: ["#fdd835", "#ef9a9a", "#90caf9", "#cfd8dc"]
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "bottom"
+      }
+    }
+  }
 });
