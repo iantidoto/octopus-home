@@ -57,11 +57,6 @@ document.getElementById("expensesBox").addEventListener("click", () => {
   alert("Detalle de gastos:\n- Hogar: 250 €\n- Ocio: 100 €\n- Transporte: 50 €\n- Otros: 50 €");
 });
 
-// Botón añadir movimiento
-document.getElementById("addExpense").addEventListener("click", () => {
-  alert("Función de añadir movimiento aún en desarrollo.");
-});
-
 // Gráfico circular
 const ctx = document.getElementById("expenseChart").getContext("2d");
 new Chart(ctx, {
