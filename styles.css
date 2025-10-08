@@ -40,6 +40,7 @@ select {
   text-align: center;
   padding: 10px;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 .income {
@@ -53,12 +54,14 @@ select {
 }
 
 #forecastToggle {
+  margin-left: 20px;
   padding: 8px 12px;
   font-size: 0.9rem;
   background-color: #e0e0e0;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .chart {
@@ -79,10 +82,15 @@ canvas {
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 20px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
 }
 
-.hidden {
-  display: none;
+#forecastPanel.visible {
+  max-height: 500px;
+  opacity: 1;
 }
 
 #forecastList li {
@@ -103,21 +111,3 @@ canvas {
   border-radius: 8px;
   cursor: pointer;
 }
-
-#forecastToggle {
-  margin-left: 20px;
-  transition: background-color 0.3s ease;
-}
-
-#forecastPanel {
-  transition: max-height 0.4s ease, opacity 0.4s ease;
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-}
-
-#forecastPanel.visible {
-  max-height: 500px;
-  opacity: 1;
-}
-
