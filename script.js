@@ -14,9 +14,25 @@ const data = {
   ]
 };
 
+// Generar selector de meses dinámico
+const monthSelector = document.getElementById("monthSelector");
+const today = new Date();
+
+for (let i = 0; i < 12; i++) {
+  const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+  const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+  const label = date.toLocaleString("es-ES", { month: "long", year: "numeric" });
+  const option = document.createElement("option");
+  option.value = value;
+  option.textContent = label.charAt(0).toUpperCase() + label.slice(1);
+  monthSelector.appendChild(option);
+}
+
+// Mostrar totales
 document.getElementById("incomeTotal").textContent = `${data.ingresos} €`;
 document.getElementById("expensesTotal").textContent = `${data.gastos} €`;
 
+// Mostrar previsión con animación
 const toggleBtn = document.getElementById("forecastToggle");
 const forecastPanel = document.getElementById("forecastPanel");
 const forecastList = document.getElementById("forecastList");
@@ -25,16 +41,28 @@ toggleBtn.addEventListener("click", () => {
   forecastPanel.classList.toggle("visible");
 });
 
+// Cargar previsiones
 data.previsiones.forEach(item => {
   const li = document.createElement("li");
   li.textContent = `${item.nombre} | ${item.categoria} | ${item.monto} € | ${item.fecha} | ${item.nota}`;
   forecastList.appendChild(li);
 });
 
+// Detalle al hacer clic en ingresos/gastos
+document.getElementById("incomeBox").addEventListener("click", () => {
+  alert("Detalle de ingresos:\n- Beca: 133 €\n- Proyecto freelance: 527 €");
+});
+
+document.getElementById("expensesBox").addEventListener("click", () => {
+  alert("Detalle de gastos:\n- Hogar: 250 €\n- Ocio: 100 €\n- Transporte: 50 €\n- Otros: 50 €");
+});
+
+// Botón añadir movimiento
 document.getElementById("addExpense").addEventListener("click", () => {
   alert("Función de añadir movimiento aún en desarrollo.");
 });
 
+// Gráfico circular
 const ctx = document.getElementById("expenseChart").getContext("2d");
 new Chart(ctx, {
   type: "pie",
