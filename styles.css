@@ -1,1 +1,111 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  padding: 20px;
+  line-height: 1.6;
+}
+
+/* Encabezado */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 1.8rem;
+}
+
+select {
+  padding: 6px 10px;
+  font-size: 1rem;
+}
+
+/* Totales */
+.totals {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.totals div {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.income {
+  background-color: #e0f7e9;
+  color: #2e7d32;
+}
+
+.expenses {
+  background-color: #fdecea;
+  color: #c62828;
+}
+
+#forecastToggle {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Gráfico */
+.chart {
+  margin-bottom: 20px;
+}
+
+canvas {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Panel de previsión */
+#forecastPanel {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+#forecastList li {
+  margin-bottom: 10px;
+  list-style: none;
+}
+
+/* Botón añadir */
+.add {
+  text-align: center;
+}
+
+#addExpense {
+  padding: 12px 20px;
+  font-size: 1rem;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
