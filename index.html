@@ -9,18 +9,15 @@
 <body>
   <header>
     <h1>🐙 Octopus Home</h1>
-    <select id="monthSelector">
-      <option value="2025-10">Octubre 2025</option>
-      <option value="2025-09">Septiembre 2025</option>
-    </select>
+    <select id="monthSelector"></select>
   </header>
 
   <section class="totals">
-    <div class="income">
+    <div class="income" id="incomeBox">
       <h2>Ingresos</h2>
       <p id="incomeTotal">0 €</p>
     </div>
-    <div class="expenses">
+    <div class="expenses" id="expensesBox">
       <h2>Gastos</h2>
       <p id="expensesTotal">0 €</p>
     </div>
@@ -32,7 +29,7 @@
     <canvas id="expenseChart"></canvas>
   </section>
 
-  <section id="forecastPanel" class="hidden">
+  <section id="forecastPanel">
     <h2>Previsión de gastos</h2>
     <ul id="forecastList"></ul>
   </section>
